@@ -1,0 +1,64 @@
+================================================================================
+  ШАБЛОН ДЭ — Django + Bootstrap (ГИА 09.02.07)
+  Быстрая установка после распаковки архива gia_exam_template_DEMO.zip
+================================================================================
+
+ЧТО В АРХИВЕ:
+  - весь код проекта, миграции БД, картинки, CSS
+  - README.md, КАК_ПОДГОНЯТЬ_ПОД_ЗАДАНИЕ.md, этот файл
+  - requirements.txt (список библиотек для pip)
+
+ЧЕГО НЕТ (установите сами):
+  - Python (скачать с python.org, версия 3.12 или 3.13)
+  - библиотеки Django (команда pip install ниже)
+  - база db.sqlite3 (создаётся командой migrate)
+
+================================================================================
+
+1. РАСПАКУЙТЕ архив в любую папку, например:
+   Windows: D:\Projects\gia_exam_template
+   Linux:   ~/gia_exam_template
+
+2. ОТКРОЙТЕ терминал в этой папке.
+
+--- WINDOWS ---
+
+   python -m venv .venv
+   .venv\Scripts\activate
+   pip install -r requirements.txt
+   python manage.py migrate
+   python manage.py runserver
+
+   Браузер: http://127.0.0.1:8000/
+
+--- LINUX ---
+   python3 --version - проверить есть ли питон
+   Если нет питона то sudo apt install python3.11.2 - устанвка питона
+   Если нет git, то sudo apt install git - установка гита
+   Если нет pip, то sudo apt install pip
+   После установки git, нужно будет написать git clone и ссылка на мой репозиторий
+   cd путь_к_проекту
+   python3 -m venv .venv - папка для виртуального окружения
+   source .venv/bin/activate - запуск виртуального окружения
+   pip install -r requirements.txt - установка конфига
+   python manage.py migrate - установка БДшки
+   python manage.py runserver - запуска сайта
+   python manage.py runserver 127.0.0.1:8000 --noreload - если плохо грузит сайт
+
+   Браузер: http://127.0.0.1:8000/
+
+3. ПРОВЕРКА
+
+   Регистрация:     /register/
+   Вход:            /login/
+   Админ (задание): /admin-panel/login/  →  Admin / KorokNET
+
+4. ДОКУМЕНТАЦИЯ
+
+   README.md                    — установка, цвета, ошибки
+   КАК_ПОДГОНЯТЬ_ПОД_ЗАДАНИЕ.md — другая фирма, БД, поля
+
+5. НУЖЕН Python 3.12 или 3.13 (рекомендуется).
+   Python 3.14 — см. README.md (патч уже в проекте).
+
+================================================================================

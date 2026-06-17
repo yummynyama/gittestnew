@@ -1,0 +1,55 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Мои заявки — {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="h3 mb-0">Мои заявки</h1>
+    <a href="{% url 'portal:application_create' %}" class="btn btn-success">+ Новая заявка</a>
+</div>
+
+{% if applications %}
+<div class="row g-3">
+    {% for app in applications %}
+    <div class="col-12 col-lg-6">
+        <div class="card h-100 app-card fade-in">
+            <div class="card-body">
+                <h2 class="h5">{{ app.course_name }}</h2>
+                <ul class="list-unstyled small mb-2">
+                    <li><strong>Дата начала:</strong> {{ app.start_date|date:"d.m.Y" }}</li>
+                    <li><strong>Оплата:</strong> {{ app.get_payment_display_ru }}</li>
+                    <li><strong>Статус:</strong>
+                        <span class="badge status-{{ app.status }}">{{ app.get_status_display_ru }}</span>
+                    </li>
+                </ul>
+
+                {% if app.review %}
+                <div class="review-block mt-2 p-2 bg-light rounded">
+                    <strong>Ваш отзыв ({{ app.review.rating }}/5):</strong>
+                    <p class="mb-0 small">{{ app.review.text }}</p>
+                </div>
+                {% elif app.status == "completed" %}
+                <form method="post" class="mt-2 border-top pt-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="review_app_id" value="{{ app.pk }}">
+                    <p class="small text-muted">Обучение завершено — вы можете оставить отзыв.</p>
+                    <div class="mb-2">
+                        <label class="form-label small" for="rating-{{ app.pk }}">Оценка</label>
+                        <input type="number" id="rating-{{ app.pk }}" name="rating" class="form-control form-control-sm" min="1" max="5" value="5" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small" for="text-{{ app.pk }}">Отзыв</label>
+                        <textarea id="text-{{ app.pk }}" name="text" class="form-control form-control-sm" rows="2" required placeholder="Опишите качество услуг"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Оставить отзыв</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">У вас пока нет заявок. <a href="{% url 'portal:application_create' %}">Создайте первую</a>.</div>
+{% endif %}
+{% endblock %}

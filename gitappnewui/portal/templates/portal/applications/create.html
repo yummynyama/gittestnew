@@ -1,0 +1,30 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Новая заявка — {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-7">
+        <div class="card shadow-sm fade-in">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3">Формирование заявки</h1>
+                <p class="text-muted small">Укажите курс, дату начала в формате ДД.ММ.ГГГГ и способ оплаты.</p>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="invalid-feedback d-block">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">{{ btn_send_application }}</button>
+                    <a href="{% url 'portal:application_list' %}" class="btn btn-link">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

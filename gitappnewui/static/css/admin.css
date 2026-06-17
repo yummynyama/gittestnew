@@ -1,0 +1,87 @@
+/* Панель администратора — отдельный модуль (критерий Б1Д) */
+body.admin-portal {
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    font-family: system-ui, sans-serif;
+}
+
+.admin-sidebar {
+    width: 220px;
+    background: #11111b;
+    padding: 1.5rem 1rem;
+    flex-shrink: 0;
+}
+
+.admin-brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: #cba6f7;
+}
+
+.admin-sidebar nav a {
+    display: block;
+    color: #a6adc8;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    margin-bottom: 0.25rem;
+}
+
+.admin-sidebar nav a:hover,
+.admin-sidebar nav a.active {
+    background: #313244;
+    color: #fff;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.admin-login-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
+.admin-login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #313244;
+    border: none;
+    color: #cdd6f4;
+}
+
+.admin-table {
+    background: #313244;
+    color: #cdd6f4;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.admin-table thead {
+    background: #45475a;
+}
+
+.admin-filters .form-control,
+.admin-filters .form-select {
+    background: #313244;
+    border-color: #45475a;
+    color: #cdd6f4;
+}
+
+@media (max-width: 768px) {
+    body.admin-portal {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+    }
+}
