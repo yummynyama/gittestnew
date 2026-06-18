@@ -1,0 +1,283 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        :root {
+            --indigo-900: #1E1B4B;
+            --indigo-700: #3730A3;
+            --violet-600: #7C3AED;
+            --violet-100: #EDE9FE;
+            --surface: #F8F7FF;
+            --card-bg: #FFFFFF;
+            --text-main: #1E1B4B;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--surface);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            background-color: var(--indigo-900) !important;
+            padding: 0.75rem 0;
+            border-bottom: 2px solid var(--violet-600);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            color: #fff !important;
+        }
+
+        .navbar-brand img {
+            filter: brightness(0) invert(1);
+        }
+
+        .nav-link {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.75) !important;
+            transition: color 0.15s;
+            padding: 0.5rem 0.75rem !important;
+            border-radius: 6px;
+        }
+
+        .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .nav-link.active {
+            color: #fff !important;
+        }
+
+        .nav-link.nav-cta {
+            background: var(--violet-600);
+            color: #fff !important;
+            padding: 0.4rem 1rem !important;
+        }
+
+        .nav-link.nav-cta:hover {
+            background: #6D28D9;
+        }
+
+        .navbar-text-muted {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5) !important;
+        }
+
+        /* ── Alerts ── */
+        .alert {
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+        }
+
+        /* ── Cards ── */
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(30,27,75,0.06), 0 4px 16px rgba(30,27,75,0.06);
+        }
+
+        /* ── Buttons ── */
+        .btn-primary {
+            background: var(--violet-600);
+            border-color: var(--violet-600);
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.55rem 1.5rem;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            background: #6D28D9;
+            border-color: #6D28D9;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-secondary {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* ── Form controls ── */
+        .form-control, .form-select {
+            border-radius: 8px;
+            border-color: var(--border);
+            padding: 0.55rem 0.9rem;
+            font-size: 0.925rem;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--violet-600);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 0.875rem;
+            margin-bottom: 0.35rem;
+            color: var(--text-main);
+        }
+
+        .form-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: var(--indigo-900) !important;
+            color: rgba(255,255,255,0.5) !important;
+            font-size: 0.8rem;
+            padding: 1rem 0;
+        }
+
+        /* ── Fade in ── */
+        .fade-in {
+            animation: fadeIn 0.35s ease both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Hero slider ── */
+        .hero-slider {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: var(--indigo-900);
+        }
+
+        .slider-track { position: relative; width: 100%; }
+
+        .slider-slide {
+            display: none;
+            width: 100%;
+            max-height: 260px;
+            object-fit: cover;
+        }
+
+        .slider-slide.active { display: block; }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            backdrop-filter: blur(4px);
+            transition: background 0.15s;
+        }
+
+        .slider-btn:hover { background: rgba(255,255,255,0.3); }
+        .slider-btn.prev { left: 12px; }
+        .slider-btn.next { right: 12px; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="user-portal">
+
+    <nav class="navbar navbar-expand-lg shadow-sm fade-in">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'portal:home' %}">
+                <img src="{% static 'images/logo.svg' %}" alt="Логотип" width="28" height="28">
+                {{ site_name }}
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto gap-1 mt-2 mt-lg-0">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal:application_list' %}">Мои заявки</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-cta" href="{% url 'portal:application_create' %}">+ Новая заявка</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav gap-1 mt-2 mt-lg-0 align-items-lg-center">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link navbar-text-muted">{{ user.full_name }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal:logout' %}">Выход</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal:login' %}">Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-cta" href="{% url 'portal:register' %}">Регистрация</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item ms-lg-2">
+                        <a class="nav-link" style="color:rgba(255,255,255,0.4) !important; font-size:0.8rem;" href="{% url 'portal:admin_login' %}">Админ</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="container py-5">
+        {% block hero %}{% endblock %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="border-top mt-auto">
+        <div class="container text-center">
+            {{ site_name }} — {{ site_tagline }}
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/slider.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Мои заявки — {{ site_name }}{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 fade-in">
+    <div>
+        <h1 class="h5 fw-bold mb-0" style="color:#1E1B4B;">Мои заявки</h1>
+        <p class="mb-0 mt-1" style="font-size:0.85rem; color:#6B7280;">История ваших обращений и текущий статус</p>
+    </div>
+    <a href="{% url 'portal:application_create' %}" class="btn btn-primary">+ Новая заявка</a>
+</div>
+
+{% if applications %}
+<div class="row g-3">
+    {% for app in applications %}
+    <div class="col-12 col-lg-6">
+        <div class="card h-100 fade-in" style="border-left: 3px solid #7C3AED;">
+            <div class="card-body p-4">
+
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h2 class="h6 fw-bold mb-0" style="color:#1E1B4B;">{{ app.course_name }}</h2>
+                    <span class="badge status-{{ app.status }}">{{ app.get_status_display_ru }}</span>
+                </div>
+
+                <div class="d-flex flex-column gap-1 mb-3" style="font-size:0.85rem; color:#6B7280;">
+                    <span>📅 Дата начала: <strong style="color:#1E1B4B;">{{ app.start_date|date:"d.m.Y" }}</strong></span>
+                    <span>💳 Оплата: <strong style="color:#1E1B4B;">{{ app.get_payment_display_ru }}</strong></span>
+                </div>
+
+                {% if app.review %}
+                <div class="p-3 rounded-3 mt-2" style="background:#F5F4FB; border:1px solid #EDE9FE;">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <span style="font-size:0.75rem; font-weight:600; color:#7C3AED; text-transform:uppercase; letter-spacing:0.05em;">Ваш отзыв</span>
+                        <span class="badge" style="background:#EDE9FE; color:#7C3AED;">{{ app.review.rating }}/5 ★</span>
+                    </div>
+                    <p class="mb-0" style="font-size:0.85rem; color:#4B5563;">{{ app.review.text }}</p>
+                </div>
+
+                {% elif app.status == "completed" %}
+                <div class="border-top pt-3 mt-2">
+                    <p class="mb-2" style="font-size:0.8rem; color:#6B7280;">Обучение завершено — оставьте отзыв.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="review_app_id" value="{{ app.pk }}">
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size:0.8rem;" for="rating-{{ app.pk }}">Оценка (1–5)</label>
+                            <input type="number" id="rating-{{ app.pk }}" name="rating"
+                                   class="form-control form-control-sm" min="1" max="5" value="5" required
+                                   style="max-width:80px;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="font-size:0.8rem;" for="text-{{ app.pk }}">Комментарий</label>
+                            <textarea id="text-{{ app.pk }}" name="text"
+                                      class="form-control form-control-sm" rows="2" required
+                                      placeholder="Опишите качество услуг"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">Отправить отзыв</button>
+                    </form>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="card fade-in text-center p-5" style="border:2px dashed #EDE9FE;">
+    <div style="font-size:2.5rem; margin-bottom:1rem;">📋</div>
+    <p class="fw-600 mb-1" style="color:#1E1B4B;">Заявок пока нет</p>
+    <p class="mb-3" style="font-size:0.875rem; color:#6B7280;">Создайте первую заявку на обучение</p>
+    <a href="{% url 'portal:application_create' %}" class="btn btn-primary mx-auto" style="width:fit-content;">+ Новая заявка</a>
+</div>
+{% endif %}
+
+{% endblock %}

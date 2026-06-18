@@ -1,0 +1,112 @@
+{% extends "portal/base_admin.html" %}
+
+{% block title %}Заявки — Администратор{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="h4 fw-bold mb-0" style="color:#1E1B4B;">Все заявки</h1>
+        <p class="mb-0 mt-1" style="font-size:0.85rem; color:#6B7280;">Управление заявками пользователей</p>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4 p-3">
+    <form method="get" class="row g-2 align-items-end admin-filters">
+        <div class="col-12 col-md-5">
+            <label class="form-label mb-1" style="font-size:0.75rem; color:#6B7280; text-transform:uppercase; letter-spacing:0.05em;">Поиск</label>
+            <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Курс, логин, ФИО…">
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label mb-1" style="font-size:0.75rem; color:#6B7280; text-transform:uppercase; letter-spacing:0.05em;">Статус</label>
+            <select name="status" class="form-select">
+                <option value="">Все статусы</option>
+                <option value="new" {% if status_filter == "new" %}selected{% endif %}>Новая</option>
+                <option value="in_progress" {% if status_filter == "in_progress" %}selected{% endif %}>Идёт обучение</option>
+                <option value="completed" {% if status_filter == "completed" %}selected{% endif %}>Завершено</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <button type="submit" class="btn btn-outline-secondary w-100">Применить</button>
+        </div>
+    </form>
+</div>
+
+<!-- Table -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table admin-table mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Пользователь</th>
+                    <th>Курс</th>
+                    <th>Дата</th>
+                    <th>Оплата</th>
+                    <th>Статус</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in page_obj %}
+                <tr>
+                    <td style="color:#9CA3AF; font-size:0.8rem;">{{ app.pk }}</td>
+                    <td>
+                        <div class="fw-500" style="font-size:0.875rem;">{{ app.user.full_name }}</div>
+                        <div style="font-size:0.775rem; color:#9CA3AF;">{{ app.user.username }}</div>
+                    </td>
+                    <td style="font-size:0.875rem;">{{ app.course_name }}</td>
+                    <td style="font-size:0.875rem; color:#6B7280; white-space:nowrap;">{{ app.start_date|date:"d.m.Y" }}</td>
+                    <td style="font-size:0.875rem;">{{ app.get_payment_display_ru }}</td>
+                    <td>
+                        <span class="badge status-{{ app.status }}">{{ app.get_status_display_ru }}</span>
+                    </td>
+                    <td>
+                        {% if app.status == "new" or app.status == "in_progress" %}
+                        <form method="post" class="d-flex gap-2 align-items-center flex-wrap">
+                            {% csrf_token %}
+                            <input type="hidden" name="app_id" value="{{ app.pk }}">
+                            <select name="status" class="form-select form-select-sm" style="min-width:155px;">
+                                <option value="in_progress">Идёт обучение</option>
+                                <option value="completed">Завершено</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                        </form>
+                        {% else %}
+                        <span style="color:#D1D5DB; font-size:0.85rem;">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5" style="color:#9CA3AF;">
+                        <div style="font-size:2rem; margin-bottom:0.5rem;">📭</div>
+                        Заявок не найдено
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-4" aria-label="Страницы">
+    <ul class="pagination justify-content-center mb-0">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search }}&status={{ status_filter }}">← Назад</a>
+        </li>
+        {% endif %}
+        <li class="page-item disabled">
+            <span class="page-link" style="color:#6B7280;">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search }}&status={{ status_filter }}">Вперёд →</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
